@@ -25,12 +25,18 @@ public:
 
 	UPROPERTY(VisibleAnywhere,BlueprintReadWrite)
 	bool CanTakedown = false;
+	bool CanScore = false;
 
 	class UPlayerStatComponent* PlayerStatComp; // pointer to PlayerStats
+
 
 protected:
 	
 	bool bIsSprinting;
+	// Scoring
+	bool bIsScoring;
+	float fTimeScoring;
+	
 	FTimerHandle SprintingHandle; // Tick to handle the deal on stamina Bar
 
 protected:
@@ -42,6 +48,7 @@ protected:
 
 	void MoveForward(float Value);
 	void MoveRight(float Value);
+	
 	void HandleSprinting();
 
 	// Movement Character
@@ -51,6 +58,13 @@ protected:
 	UFUNCTION()
 		void Walk();
 	
+	// Hold Button Action Map
+	UFUNCTION()
+		void HoldDown();
+
+	UFUNCTION()
+		void HoldUp();
+
 	UFUNCTION(BlueprintPure)
 		float ReturnPlayerStat(); // Call to player stat Stamina
 	

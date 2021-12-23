@@ -45,7 +45,6 @@ AmainCharacter::AmainCharacter()
 
 	// Player Stat Component
 	PlayerStatComp = CreateDefaultSubobject<UPlayerStatComponent>("PlayerStatComponent");
-
 }
 
 
@@ -60,6 +59,10 @@ void AmainCharacter::BeginPlay()
 void AmainCharacter::Tick(float DeltaTime)
 {
 	Super::Tick(DeltaTime);
+	if (bIsScoring)
+	{
+		fTimeScoring += DeltaTime;
+	}
 }
 
 // Called to bind functionality to input
@@ -74,6 +77,8 @@ void AmainCharacter::SetupPlayerInputComponent(UInputComponent* PlayerInputCompo
 	PlayerInputComponent->BindAxis("lookUp/Down", this,&APawn::AddControllerPitchInput);
 	PlayerInputComponent->BindAction("Sprint", IE_Pressed, this, &AmainCharacter::Sprint);
 	PlayerInputComponent->BindAction("Sprint", IE_Released, this, &AmainCharacter::Walk);
+	PlayerInputComponent->BindAction("Hold", IE_Pressed, this, &AmainCharacter::HoldDown);
+	PlayerInputComponent->BindAction("Hold", IE_Released, this, &AmainCharacter::HoldUp);
 
 }
 
@@ -141,6 +146,33 @@ float AmainCharacter::ReturnPlayerStat()
 	return PlayerStatComp->GetStamina();
 }
 
+
+void AmainCharacter::HoldDown()
+{
+	if(CanScore)
+	{
+		bIsScoring = true;
+	}
+	
+}
+
+void AmainCharacter::HoldUp()
+{
+	if(CanScore)
+	{
+		bIsScoring = false;
+
+		if(fTimeScoring > 2)
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Scoring... After 2 Hold Seconds"));
+		}
+		else
+		{
+			UE_LOG(LogTemp, Warning, TEXT("Can't Score"));
+		}
+		fTimeScoring = 0.f;
+	}
+}
 
 
 
